@@ -169,7 +169,7 @@ async def account_login(bot: Client, m: Message):
         getstatusoutput(f"wget '{thumb}' -O 'thumb.jpg'")
         thumb = "thumb.jpg"
     else:
-        thumb == "no"
+        thumb = "no"
 
     if len(links) == 1:
         count = 1
@@ -203,11 +203,32 @@ async def account_login(bot: Client, m: Message):
             else:
                 ytf = f"b[height<={raw_text2}]/bv[height<={raw_text2}]+ba/b/bv+ba"
 
-            if "jw-prod" in url:
-                cmd = f'yt-dlp -o "{name}.mp4" "{url}"'
-            else:
-                cmd = f'yt-dlp -f "{ytf}" "{url}" -o "{name}.mp4"'
+         #   if "jw-prod" in url:
+      #          cmd = f'yt-dlp -o "{name}.mp4" "{url}"'
+      #      else:
+      #          cmd = f'yt-dlp -f "{ytf}" "{url}" -o "{name}.mp4"'
 
+
+
+
+            if "jw-prod" in url:
+                cmd = (
+                f'yt-dlp '
+                f'--no-check-certificate '
+                f'--add-header "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64)" '
+                f'-o "{name}.mp4" "{url}"'
+                )
+            else:
+                cmd = (
+                f'yt-dlp '
+                f'--no-check-certificate '
+                f'--add-header "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64)" '
+                f'-f "{ytf}" "{url}" '
+                f'-o "{name}.mp4"'
+                )
+
+
+            
             try:  
                 
                 cc = f'**[ 🎥 ] Vid_ID:** {str(count).zfill(3)}.** {𝗻𝗮𝗺𝗲𝟭}{MR}.mkv\n✉️ 𝐁𝐚𝐭𝐜𝐡 » **{raw_text0}**'
@@ -244,7 +265,8 @@ async def account_login(bot: Client, m: Message):
                     await prog.delete(True)
                     await helper.send_vid(bot, m, cc, filename, thumb, name, prog)
                     count += 1
-                    time.sleep(1)
+                    await asyncio.sleep(1)
+                    #time.sleep(1)
 
             except Exception as e:
                 await m.reply_text(
